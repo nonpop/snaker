@@ -45,19 +45,19 @@ func CamelToSnake(s string) string {
 	return result
 }
 
-func snakeToCamel(s string, upperCase bool) string {
+func snakeToCamel(s string, upperCase bool, useInitialisms bool) string {
 	var result string
 
 	words := strings.Split(s, "_")
 
 	for i, word := range words {
-		if exception := snakeToCamelExceptions[word]; len(exception) > 0 {
+		if exception := snakeToCamelExceptions[word]; useInitialisms && len(exception) > 0 {
 			result += exception
 			continue
 		}
 
 		if upperCase || i > 0 {
-			if upper := strings.ToUpper(word); commonInitialisms[upper] {
+			if upper := strings.ToUpper(word); useInitialisms && commonInitialisms[upper] {
 				result += upper
 				continue
 			}
@@ -77,12 +77,22 @@ func snakeToCamel(s string, upperCase bool) string {
 
 // SnakeToCamel returns a string converted from snake case to uppercase
 func SnakeToCamel(s string) string {
-	return snakeToCamel(s, true)
+	return snakeToCamel(s, true, true)
 }
 
 // SnakeToCamelLower returns a string converted from snake case to lowercase
 func SnakeToCamelLower(s string) string {
-	return snakeToCamel(s, false)
+	return snakeToCamel(s, false, true)
+}
+
+// SnakeToCamelNoInitialisms returns a string converted from snake case to uppercase, ignoring initialisms
+func SnakeToCamelNoInitialisms(s string) string {
+	return snakeToCamel(s, true, false)
+}
+
+// SnakeToCamelLower returns a string converted from snake case to lowercase, ignoring initialisms
+func SnakeToCamelLowerNoInitialisms(s string) string {
+	return snakeToCamel(s, false, false)
 }
 
 // startsWithInitialism returns the initialism if the given string begins with it
